@@ -27,6 +27,7 @@ export const move = (currentGame: Game, playerCoords: PlayerCoords): Game => {
     let newBoard = structuredClone(currentGame.board)
     newBoard[playerCoords.row][playerCoords.column] = currentGame.currentPlayer
     const newPlayer = playerSwitch(currentGame.currentPlayer)
+    console.log(newPlayer)
     const newState: Game = {
         board: newBoard,
         currentPlayer: newPlayer,
@@ -37,27 +38,40 @@ export const move = (currentGame: Game, playerCoords: PlayerCoords): Game => {
 
 export const checkEnd = (board: Board, currentPlayer: Player): endState => {
     //check every cell for current, if true, check up if possible,
+    //console.log('checking')
+    let Full: number = 0;
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (board[i][j] == currentPlayer) {
+            if (!board[i][j]) {
+                Full++
+            }
+            else if (board[i][j] == currentPlayer) {
                 //diagonals only middle, upleft downright
-                if (i == 1 || j == 1) {
+                if (i == 1 && j == 1) {
                     if (board[i - 1][j - 1] == currentPlayer) {
                         if (board[i + 1][j + 1] == currentPlayer) {
+                            console.log('winner');
+
                             return currentPlayer
                         }
                     }
                     //upright down left
                     if (board[i + 1][j - 1] == currentPlayer) {
-                        if (board[i - 1][j + 1] == currentPlayer)
+                        if (board[i - 1][j + 1] == currentPlayer) {
+                            console.log('winner');
+
                             return currentPlayer
+                        }
                     }
                 }
                 //up down only i=2
                 if (i == 1) {
                     if (board[i - 1][j] == currentPlayer) {
-                        if (board[i + 1][j] == currentPlayer)
+                        if (board[i + 1][j] == currentPlayer) {
+                            console.log('winner');
+
                             return currentPlayer
+                        }
                     }
                 }
 
@@ -71,6 +85,10 @@ export const checkEnd = (board: Board, currentPlayer: Player): endState => {
 
             }
         }
+    }
+    if (Full == 0) {
+        //console.log('tie')
+        return 'tie'
     }
     return
 }
