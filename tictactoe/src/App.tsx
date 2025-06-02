@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { initialGameState, move, type PlayerCoords } from './game/game'
-
+import { initialGameState, move, type Game, type PlayerCoords } from './game/game'
+//import './App.css'
 // const exampleGame:Game = {
 //     board: [[null,null,null],
 //     [null,'x',null],
@@ -22,10 +22,16 @@ function App() {
     console.log('hi')
     setGame(current => move(current, clickCoords))
   }
+  const checkWin = (currentGame: Game) => {
+    if (currentGame.end) {
+      return currentGame.end
+    }
+  }
   return (
     <>
       <div>
-        <h1>Current Player: {game.currentPlayer}</h1>
+
+        {(checkWin(game)) ? <>Result:{checkWin(game) == 'tie' ? ' Tie' : (<>{checkWin(game)} Wins</>)}</> : null}
 
 
         <div className='game-board'>
@@ -44,7 +50,10 @@ function App() {
             <button onClick={() => boxClick(2, 1)}>{game.board[2][1] ? game.board[2][1] : '-'}</button>
             <button onClick={() => boxClick(2, 2)}>{game.board[2][2] ? game.board[2][2] : '-'}</button>
           </div>
+
         </div>
+        <h5>Current Player: {game.currentPlayer}</h5>
+
       </div>
     </>
   )
