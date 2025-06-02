@@ -30,12 +30,48 @@ export const move = (currentGame: Game, playerCoords: PlayerCoords): Game => {
     const newState: Game = {
         board: newBoard,
         currentPlayer: newPlayer,
-        end: checkEnd(newBoard)
+        end: checkEnd(newBoard, currentGame.currentPlayer)
     }
     return newState
 }
 
-export const checkEnd = (board: Board): endState => {
+export const checkEnd = (board: Board, currentPlayer: Player): endState => {
+    //check every cell for current, if true, check up if possible,
+    for (let i = 0; i++; i < 3) {
+        for (let j = 0; j++; j < 3) {
+            if (board[i][j] == currentPlayer) {
+                //diagonals only middle, upleft downright
+                if (i == 2 || j == 2) {
+                    if (board[i - 1][j - 1] == currentPlayer) {
+                        if (board[i + 1][j + 1] == currentPlayer) {
+                            return currentPlayer
+                        }
+                    }
+                    //upright down left
+                    if (board[i + 1][j - 1] == currentPlayer) {
+                        if (board[i - 1][j + 1] == currentPlayer)
+                            return currentPlayer
+                    }
+                }
+                //up down only i=2
+                if (i == 2) {
+                    if (board[i - 1][j] == currentPlayer) {
+                        if (board[i + 1][j] == currentPlayer)
+                            return currentPlayer
+                    }
+                }
+
+                //left right only j=2
+                if (j == 2) {
+                    if (board[i][j - 1] == currentPlayer) {
+                        if (board[i][j + 1] == currentPlayer)
+                            return currentPlayer
+                    }
+                }
+
+            }
+        }
+    }
     return
 }
 
