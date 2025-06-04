@@ -6,7 +6,7 @@ export type Player = 'x' | 'o'
 export type Board = Cell[][]
 export type PlayerCoords = { row: number, column: number }
 export type Game = {
-    id: String,
+    id: string,
     board: Board,
     currentPlayer: Player,
     end?: endState

@@ -1,4 +1,4 @@
-import { type Board, type Game, type Player, type endStat, move, type PlayerCoords } from './game/game'
+import { type Game, move, type PlayerCoords, initialGameState } from './game/game'
 
 
 export interface TicTacApi {
@@ -9,7 +9,11 @@ export interface TicTacApi {
 
 export class InMemoryTicTacAPI implements TicTacApi {
     private games: Map<string, Game> = new Map()
-
+    async createGame(): Promise<Game> {
+        const game = initialGameState()
+        this.games.set(game.id, game)
+        return game
+    }
     async getGame(gameId: string): Promise<Game> {
         const game = this.games.get(gameId)
         if (!game) {
@@ -18,7 +22,7 @@ export class InMemoryTicTacAPI implements TicTacApi {
         return game
     }
 
-    async makeMove(gameID: string, row: number, col: number): Promise<GameState> {
+    async makeMove(gameID: string, row: number, col: number): Promise<Game> {
         const game = await this.getGame(gameID)
         const newCoords: PlayerCoords = { row: row, column: col }
         const newGame = move(game, newCoords)
@@ -27,10 +31,30 @@ export class InMemoryTicTacAPI implements TicTacApi {
     }
 }
 export class ClientTicTacAPI implements TicTacApi {
-    async async getGame(gameId: string): Promise<Game> {
-
+    async createGame(): Promise<Game> {
+        const response = await fetch("/api/game", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const game = await response.json()
+        return game
+    }
+    async getGame(gameId: string): Promise<Game> {
+        const response = await fetch(`/api/game/${gameId}`)
+        const game = await response.json()
+        return game
     }
     async makeMove(gameId: string, row: number, col: number): Promise<Game> {
-
+        const response = await fetch(`/api/game/${gameId}/move`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ row, col })
+        })
+        const game = await response.json()
+        return game
     }
 }

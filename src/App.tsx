@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { initialGameState, move, type Game, type PlayerCoords } from './game/game'
 import './App.css'
+import { ClientTicTacAPI } from './api'
 import clsx from 'clsx'
 // const exampleGame:Game = {
 //     board: [[null,null,null],
@@ -13,20 +14,26 @@ import clsx from 'clsx'
 //display 9 boxes and current player, pop up for winner
 //boxes -> click -> move, setGame
 function App() {
-  const [game, setGame] = useState(initialGameState)
+  const api = useMemo(() => new ClientTicTacAPI(), [])
+  const [game, setGame] = useState<Game | undefined>()
+  useEffect(() => {
+    initialGameState()
+  }, [])
+  async function boxClick(row: number, col: number) {
 
-  const boxClick = (row: number, col: number) => {
-    const clickCoords: PlayerCoords = {
-      row: row,
-      column: col
-    }
-    console.log('hi')
-    setGame(current => move(current, clickCoords))
+    const newGame = await api.makeMove(game!.id, row, col)
+    setGame(newGame)
   }
   const checkWin = (currentGame: Game) => {
     if (currentGame.end) {
       return currentGame.end
     }
+  }
+
+  if (!game) {
+    return (
+      <div>Loading...</div>
+    )
   }
   return (
     <>
