@@ -1,6 +1,5 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
-import { type Board, type Game, type Player, type endState, initialGameState as createNewGame, move, initialGameState } from "../game/game";
+import { type Game, type Player, type endState, initialGameState as createNewGame, move, initialGameState } from "../game/game";
 import type { TicTacApi } from '../api';
 import { gamesTable } from './schema';
 import { eq } from 'drizzle-orm'
@@ -29,7 +28,7 @@ export class DbTicTacApi implements TicTacApi {
             end: newGame.end
         }
         await db.update(gamesTable).set(values).where(eq(gamesTable.id, gameId))
-        return game
+        return newGame
     }
     async getGame(gameId: string): Promise<Game> {
         const query = await db.select().from(gamesTable).where(eq(gamesTable.id, gameId))

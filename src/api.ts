@@ -13,7 +13,7 @@ export class InMemoryTicTacAPI implements TicTacApi {
     async createGame(): Promise<Game> {
         const game = initialGameState()
         this.games.set(game.id, game)
-        console.log(this.games)
+        //console.log(this.games)
         return game
     }
     async getGame(gameId: string): Promise<Game> {
@@ -25,8 +25,8 @@ export class InMemoryTicTacAPI implements TicTacApi {
     }
 
     async makeMove(gameID: string, row: number, col: number): Promise<Game> {
-        console.log(gameID);
-        console.log(this.games.size)
+        //console.log(gameID);
+        //console.log(this.games.size)
         const game = await this.getGame(gameID)
 
         const newCoords: PlayerCoords = { row: row, column: col }
