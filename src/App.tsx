@@ -1,18 +1,9 @@
 import { useState, useMemo, useEffect } from 'react'
-import { initialGameState, move, type Game, type PlayerCoords } from './game/game'
+import { type Game } from './game/game'
 import './App.css'
-import { ClientTicTacAPI } from './api'
-import clsx from 'clsx'
-// const exampleGame:Game = {
-//     board: [[null,null,null],
-//     [null,'x',null],
-//     [null, null, null]
-//     ],
-//     currentPlayer: 'o'
-// }
 
-//display 9 boxes and current player, pop up for winner
-//boxes -> click -> move, setGame
+import { ClientTicTacAPI } from './api'
+
 function App() {
   const api = useMemo(() => new ClientTicTacAPI(), [])
   const [game, setGame] = useState<Game | undefined>()
