@@ -6,12 +6,14 @@ export type Player = 'x' | 'o'
 export type Board = Cell[][]
 export type PlayerCoords = { row: number, column: number }
 export type Game = {
+    id: String,
     board: Board,
     currentPlayer: Player,
     end?: endState
 }
 export const initialGameState = (): Game => {
     const newGame: Game = {
+        id: crypto.randomUUID(),
         board: [[null, null, null], [null, null, null], [null, null, null]],
         currentPlayer: 'x'
     }
@@ -29,6 +31,7 @@ export const move = (currentGame: Game, playerCoords: PlayerCoords): Game => {
     const newPlayer = playerSwitch(currentGame.currentPlayer)
     console.log(newPlayer)
     const newState: Game = {
+        id: currentGame.id,
         board: newBoard,
         currentPlayer: newPlayer,
         end: checkEnd(newBoard, currentGame.currentPlayer)
