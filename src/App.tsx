@@ -16,8 +16,13 @@ import clsx from 'clsx'
 function App() {
   const api = useMemo(() => new ClientTicTacAPI(), [])
   const [game, setGame] = useState<Game | undefined>()
+  async function createGameState() {
+    const initialState = await api.createGame()
+    setGame(initialState)
+  }
+
   useEffect(() => {
-    initialGameState()
+    createGameState()
   }, [])
   async function boxClick(row: number, col: number) {
 
@@ -35,6 +40,7 @@ function App() {
       <div>Loading...</div>
     )
   }
+  const baseButton = 'text-white p-14 rounded h-14 w-14'
   return (
     <>
       <div className='flex flex-col items-center justify-center'>
@@ -43,20 +49,25 @@ function App() {
 
 
         <div className='game-board pt-10'>
-          <div className='row'>
-            <button className='bg-blue-500  text-white py-2 px-4 rounded' onClick={() => boxClick(0, 0)}>{game.board[0][0] ? game.board[0][0] : '-'}</button>
-            <button className='bg-red-500 text-white py-2 px-4 rounded' onClick={() => boxClick(0, 1)}>{game.board[0][1] ? game.board[0][1] : '-'}</button>
-            <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={() => boxClick(0, 2)}>{game.board[0][2] ? game.board[0][2] : '-'}</button>
+          {/* {game.board.map((rowObj,rowIdx)=>{
+            rowObj.map((item,itmIdx)=>{
+              return(<></>)
+            })
+          })} */}
+          <div className='flex flex-row'>
+            <button className={`bg-blue-500  ${baseButton}`} onClick={() => boxClick(0, 0)}>{game.board[0][0] ? game.board[0][0] : ''}</button>
+            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(0, 1)}>{game.board[0][1] ? game.board[0][1] : ''}</button>
+            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(0, 2)}>{game.board[0][2] ? game.board[0][2] : ''}</button>
           </div>
-          <div className='row'>
-            <button className='bg-red-500 text-white py-2 px-4 rounded' onClick={() => boxClick(1, 0)}>{game.board[1][0] ? game.board[1][0] : '-'}</button>
-            <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={() => boxClick(1, 1)}>{game.board[1][1] ? game.board[1][1] : '-'}</button>
-            <button className='bg-red-500 text-white py-2 px-4 rounded' onClick={() => boxClick(1, 2)}>{game.board[1][2] ? game.board[1][2] : '-'}</button>
+          <div className='flex flex-row'>
+            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(1, 0)}>{game.board[1][0] ? game.board[1][0] : ''}</button>
+            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(1, 1)}>{game.board[1][1] ? game.board[1][1] : ''}</button>
+            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(1, 2)}>{game.board[1][2] ? game.board[1][2] : ''}</button>
           </div>
-          <div className='row'>
-            <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={() => boxClick(2, 0)}>{game.board[2][0] ? game.board[2][0] : '-'}</button>
-            <button className='bg-red-500 text-white py-2 px-4 rounded' onClick={() => boxClick(2, 1)}>{game.board[2][1] ? game.board[2][1] : '-'}</button>
-            <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={() => boxClick(2, 2)}>{game.board[2][2] ? game.board[2][2] : '-'}</button>
+          <div className='flex flex-row'>
+            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(2, 0)}>{game.board[2][0] ? game.board[2][0] : ''}</button>
+            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(2, 1)}>{game.board[2][1] ? game.board[2][1] : ''}</button>
+            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(2, 2)}>{game.board[2][2] ? game.board[2][2] : ''}</button>
           </div>
 
         </div>
