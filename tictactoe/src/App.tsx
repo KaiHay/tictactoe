@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { initialGameState, move, type Game, type PlayerCoords } from './game/game'
-//import './App.css'
+import './App.css'
+import clsx from 'clsx'
 // const exampleGame:Game = {
 //     board: [[null,null,null],
 //     [null,'x',null],
@@ -29,15 +30,15 @@ function App() {
   }
   return (
     <>
-      <div>
+      <div className='flex flex-col items-center justify-center'>
 
         {(checkWin(game)) ? <>Result:{checkWin(game) == 'tie' ? ' Tie' : (<>{checkWin(game)} Wins</>)}</> : null}
 
 
         <div className='game-board'>
           <div className='row'>
-            <button onClick={() => boxClick(0, 0)}>{game.board[0][0] ? game.board[0][0] : '-'}</button>
-            <button onClick={() => boxClick(0, 1)}>{game.board[0][1] ? game.board[0][1] : '-'}</button>
+            <button className='bg-blue-500 text-white py-2 px-4 rounded' onClick={() => boxClick(0, 0)}>{game.board[0][0] ? game.board[0][0] : '-'}</button>
+            <button className='btn' onClick={() => boxClick(0, 1)}>{game.board[0][1] ? game.board[0][1] : '-'}</button>
             <button onClick={() => boxClick(0, 2)}>{game.board[0][2] ? game.board[0][2] : '-'}</button>
           </div>
           <div className='row'>
@@ -52,7 +53,7 @@ function App() {
           </div>
 
         </div>
-        <h5>Current Player: {game.currentPlayer}</h5>
+        <div className='text-cyan-600'><h5>Current Player: {game.currentPlayer}</h5></div>
 
       </div>
     </>
