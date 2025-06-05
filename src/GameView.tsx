@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { type Game } from './game/game'
 import './App.css'
-
+import { io } from 'Socket.io-client'
 import { ClientTicTacAPI } from './api'
 import { useLoaderData } from 'react-router'
 
@@ -13,14 +13,19 @@ export function GameView() {
 
   const [game, setGame] = useState<Game>(initialGame)
 
-  // async function createGameState() {
-  //   const initialState = await api.createGame()
-  //   setGame(initialState)
-  // }
+  useEffect(() => {
+    const socket = io("http://localhost:3000")
+    socket.on("connect", () => {
+      console.log("bro")
+      socket.emit("join-game", game.id)
+      socket.on("update-game", async (curr_Game: Game) => {
+        const newGame = await api.getGame(curr_Game.id)
+        setGame(newGame)
 
-  // useEffect(() => {
-  //   createGameState()
-  // }, [])
+      })
+      return () => { socket.disconnect }
+    })
+  }, [game.id])
   async function boxClick(row: number, col: number) {
 
     const newGame = await api.makeMove(game!.id, row, col)

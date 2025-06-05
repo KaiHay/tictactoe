@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { ClientTicTacAPI } from './api'
-import { useNavigate } from 'react-router'
-import { type Game } from './game/game'
+import { Link, useNavigate } from 'react-router'
+import { type Game, type endState } from './game/game'
 const api = new ClientTicTacAPI
 export const GameLobby = () => {
     const [activeGames, setActive] = useState<Game[]>([])
@@ -34,9 +34,9 @@ export const GameLobby = () => {
                     </div>
                     {activeGames.map((item) => (
                         <div key={item.id} className='flex items-center justify-center size-3/4 p-1'>
-                            <button className={newGameButtonStyle} onClick={() => newGameButtonClick()}>
+                            <Link className={newGameButtonStyle} to={`/game/${item.id}`}>
                                 {item.id}
-                            </button>
+                            </Link>
                         </div>
 
                     )
