@@ -1,6 +1,6 @@
 import { type Game, move, type PlayerCoords, initialGameState } from './game/game'
 
-
+const SERVER_DB_URL = 'http://localhost:3000'
 export interface TicTacApi {
     createGame(): Promise<Game>
     makeMove(gameId: string, row: number, col: number): Promise<Game>
@@ -41,7 +41,7 @@ export class InMemoryTicTacAPI implements TicTacApi {
 }
 export class ClientTicTacAPI implements TicTacApi {
     async createGame(): Promise<Game> {
-        const response = await fetch("/api/game", {
+        const response = await fetch(`${SERVER_DB_URL}/api/game`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -51,12 +51,12 @@ export class ClientTicTacAPI implements TicTacApi {
         return game
     }
     async getGame(gameId: string): Promise<Game> {
-        const response = await fetch(`/api/game/${gameId}`)
+        const response = await fetch(`${SERVER_DB_URL}/api/game/${gameId}`)
         const game = await response.json()
         return game
     }
     async makeMove(gameId: string, row: number, col: number): Promise<Game> {
-        const response = await fetch(`/api/game/${gameId}/move`, {
+        const response = await fetch(`${SERVER_DB_URL}/api/game/${gameId}/move`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -67,7 +67,7 @@ export class ClientTicTacAPI implements TicTacApi {
         return game
     }
     async getInProgGames(): Promise<Game[]> {
-        const response = await fetch(`/api/game`)
+        const response = await fetch(`${SERVER_DB_URL}/api/game`)
         const games = await response.json()
         return games
     }
