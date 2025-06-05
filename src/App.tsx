@@ -31,38 +31,33 @@ function App() {
       <div>Loading...</div>
     )
   }
-  const baseButton = 'text-white p-14 rounded h-14 w-14'
+  const baseButton = 'text-white p-14 rounded h-14 w-14 flex items-center justify-center border'
+  const middleNoti = 'absolute bg-opacity-0 flex justify-center font-bold text-2xl items-center h-35 w-50 bg-blue-200 rounded border border-zinc-50 text-gray-600'
   return (
     <>
       <div className='flex flex-col items-center justify-center'>
 
-        {(checkWin(game)) ? <>Result:{checkWin(game) == 'tie' ? ' Tie' : (<>{checkWin(game)} Wins</>)}</> : null}
+        {(checkWin(game)) ? <div className={middleNoti} role="alert">{checkWin(game) == 'tie' ? ' Tie' : (<>{checkWin(game)?.toLocaleUpperCase()} Wins!</>)}</div> : null}
 
 
         <div className='game-board pt-10'>
-          {/* {game.board.map((rowObj,rowIdx)=>{
-            rowObj.map((item,itmIdx)=>{
-              return(<></>)
-            })
-          })} */}
-          <div className='flex flex-row'>
-            <button className={`bg-blue-500  ${baseButton}`} onClick={() => boxClick(0, 0)}>{game.board[0][0] ? game.board[0][0] : ''}</button>
-            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(0, 1)}>{game.board[0][1] ? game.board[0][1] : ''}</button>
-            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(0, 2)}>{game.board[0][2] ? game.board[0][2] : ''}</button>
-          </div>
-          <div className='flex flex-row'>
-            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(1, 0)}>{game.board[1][0] ? game.board[1][0] : ''}</button>
-            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(1, 1)}>{game.board[1][1] ? game.board[1][1] : ''}</button>
-            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(1, 2)}>{game.board[1][2] ? game.board[1][2] : ''}</button>
-          </div>
-          <div className='flex flex-row'>
-            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(2, 0)}>{game.board[2][0] ? game.board[2][0] : ''}</button>
-            <button className={`bg-red-500 ${baseButton}`} onClick={() => boxClick(2, 1)}>{game.board[2][1] ? game.board[2][1] : ''}</button>
-            <button className={`bg-blue-500 ${baseButton}`} onClick={() => boxClick(2, 2)}>{game.board[2][2] ? game.board[2][2] : ''}</button>
-          </div>
+          {game.board.map((rowObj, rowIdx) => {
+            return <div key={rowIdx} className='flex flex-row'>{rowObj.map((item, itmIdx) => {
+              return (
+                <div key={itmIdx} className=''>
+                  <button className={`bg-blue-500  ${baseButton}`} onClick={() => boxClick(rowIdx, itmIdx)}>
+                    {game.board[rowIdx][itmIdx] ? game.board[rowIdx][itmIdx] : ''}
+                  </button>
+                </div>)
+
+            })}</div>
+          })}
+
 
         </div>
-        <div className='text-cyan-600'><h5>Current Player: {game.currentPlayer}</h5></div>
+        <div className='pt-3'>
+          <div className='flex justify-center items-center rounded-2xl text-white bg-black w-50 text-center h-10'><h5>Current Player: {game.currentPlayer}</h5></div>
+        </div>
 
       </div>
     </>
