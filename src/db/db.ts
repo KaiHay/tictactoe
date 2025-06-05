@@ -1,10 +1,11 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
 import { type Game, type Player, type endState, initialGameState as createNewGame, move } from "../game/game";
 import type { TicTacApi } from '../api';
 import { gamesTable } from './schema';
-import { eq } from 'drizzle-orm'
-
-const db = drizzle(process.env.DATABASE_URL!);
+import { eq, isNull } from 'drizzle-orm'
+const client = postgres(process.env.DATABASE_URL!)
+const db = drizzle(client);
 
 export class DbTicTacApi implements TicTacApi {
     async createGame(): Promise<Game> {
@@ -42,5 +43,14 @@ export class DbTicTacApi implements TicTacApi {
             currentPlayer: game.currentPlayer as Player,
             end: game.end as endState
         }
+    }
+    async getInProgGames(): Promise<Game[]> {
+        const query = await db.select().from(gamesTable).where(isNull(gamesTable.end)).limit(5)
+
+        return query.map(game => ({
+            id: game.id,
+            board: game.board,
+            currentPlayer: game.currentPlayer as Player,
+        }))
     }
 }
