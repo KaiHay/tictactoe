@@ -18,6 +18,7 @@ export function GameView() {
   const navigate = useNavigate()
   const newGameButtonClick = async (prevId: string) => {
     const newGame = (await api.rematchGame(prevId))
+
     navigate(`/game/${newGame.id}`)
   }
 
