@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import { ClientTicTacAPI } from './api'
 import { Link, useNavigate } from 'react-router'
-import { type Game, type endState } from './game/game'
+import { type Game } from './game/game'
 const api = new ClientTicTacAPI
 export const GameLobby = () => {
     const [activeGames, setActive] = useState<Game[]>([])

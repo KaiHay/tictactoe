@@ -4,7 +4,6 @@ import './App.css'
 import { io } from 'Socket.io-client'
 import { ClientTicTacAPI } from './api'
 import { Link, useLoaderData, useNavigate } from 'react-router'
-import type { Socket } from 'socket.io'
 
 export function GameView() {
   const api = useMemo(() => new ClientTicTacAPI(), [])
@@ -86,7 +85,7 @@ export function GameView() {
 
         <div className='game-board pt-10'>
           {game.board.map((rowObj, rowIdx) => {
-            return <div key={rowIdx} className='flex flex-row'>{rowObj.map((item, itmIdx) => {
+            return <div key={rowIdx} className='flex flex-row'>{rowObj.map((_, itmIdx) => {
               return (
                 <div key={itmIdx} className=''>
                   <button disabled={game.board[rowIdx][itmIdx] !== null} className={`bg-blue-500  ${baseButton} ${hoverBorder(rowIdx, itmIdx)}`} onClick={() => boxClick(rowIdx, itmIdx)}>

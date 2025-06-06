@@ -1,6 +1,5 @@
 //e.g server.js
 import express from "express";
-import ViteExpress from "vite-express";
 import { DbTicTacApi } from "./src/db/db";
 import cors from "cors"
 import { Server } from "socket.io"
@@ -20,11 +19,11 @@ app.use(cors({
 app.get("/message", (_, res) => {
     res.send("Hello from express!")
 });
-app.post("/api/game", async (req, res) => {
+app.post("/api/game", async (_, res) => {
     const game = await newtictac.createGame()
     res.json(game)
 })
-app.get("/api/game", async (req, res) => {
+app.get("/api/game", async (_, res) => {
     const game = await newtictac.getInProgGames()
 
 
