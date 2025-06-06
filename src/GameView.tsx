@@ -4,6 +4,7 @@ import './App.css'
 import { io } from 'socket.io-client'
 import { ClientTicTacAPI } from './api'
 import { Link, useLoaderData, useNavigate } from 'react-router'
+import { SERVER_URL } from './utils/constants'
 
 export function GameView() {
   const api = useMemo(() => new ClientTicTacAPI(), [])
@@ -26,7 +27,7 @@ export function GameView() {
   }, [initialGame])
 
   useEffect(() => {
-    const socket = io(process.env.SERVER_URL)
+    const socket = io(SERVER_URL)
     socket.on("connect", () => {
       socket.emit("join-game", game.id)
 

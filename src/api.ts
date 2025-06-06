@@ -1,6 +1,7 @@
 import { type Game, move, type PlayerCoords, initialGameState } from './game/game'
+import { SERVER_URL } from './utils/constants'
 
-const SERVER_DB_URL = process.env.SERVER_URL
+const SERVER_DB_URL = SERVER_URL
 export interface TicTacApi {
     createGame(): Promise<Game>
     makeMove(gameId: string, row: number, col: number): Promise<Game>
