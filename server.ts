@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json())
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: [
         "GET", "POST"
     ]
@@ -56,7 +56,7 @@ const PORT = parseInt(process.env.PORT || "3000")
 const server = app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "*",
         methods: [
             "GET", "POST"
         ]
