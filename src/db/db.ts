@@ -4,6 +4,8 @@ import { type Game, type Player, type endState, initialGameState as createNewGam
 import type { TicTacApi } from '../api';
 import { gamesTable } from './schema';
 import { eq, isNull } from 'drizzle-orm'
+
+
 const client = postgres(process.env.DATABASE_URL!)
 const db = drizzle(client);
 
