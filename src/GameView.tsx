@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { type Game } from './game/game'
 import './App.css'
-import { io } from 'Socket.io-client'
+import { io } from 'socket.io-client'
 import { ClientTicTacAPI } from './api'
 import { Link, useLoaderData, useNavigate } from 'react-router'
 
