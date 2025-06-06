@@ -32,6 +32,16 @@ app.get("/api/game", async (req, res) => {
 })
 const makeRoomId = (game: Game) => `game-${game.id}`
 
+
+
+app.post("/api/game/:gameId/rematch", async (req, res) => {
+    const game = await newtictac.createGame()
+    io.to(`game-${req.params.gameId}`).emit("rematch-up", game.id);
+    res.json(game)
+})
+
+
+
 app.post("/api/game/:gameId/move", async (req, res) => {
     const game = await newtictac.makeMove(req.params.gameId, req.body.row, req.body.col)
     io.to(makeRoomId(game)).emit('update-game', game);
@@ -66,5 +76,13 @@ io.on("connection", (socket) => {
         const roomId = makeRoomId(newGame)
         socket.join(roomId)
         io.to(roomId).emit('user-joined', socket.id)
+    })
+
+    //rematch 
+    socket.on("rematch", async (gameID: string) => {
+        const newGame = await newtictac.getGame(gameID)
+        console.log('helo');
+        socket.emit("rematch", newGame.id)
+
     })
 })
