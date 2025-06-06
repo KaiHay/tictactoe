@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
     "@types/socket.io": "^3.0.2",
+    "@vercel/react-router": "^1.1.2",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
