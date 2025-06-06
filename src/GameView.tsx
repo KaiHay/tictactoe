@@ -26,7 +26,7 @@ export function GameView() {
   }, [initialGame])
 
   useEffect(() => {
-    const socket = io(process.env.DB_SERVER_URL)
+    const socket = io(process.env.SERVER_URL)
     socket.on("connect", () => {
       socket.emit("join-game", game.id)
 
