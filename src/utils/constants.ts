@@ -1,1 +1,1 @@
-export const SERVER_URL = import.meta.env.PROD ? 'https://tictactoe-gqy9.onrender.com' : 'http://localhost:3000'
+export const SERVER_URL = import.meta.env.VITE_SERVER_URL
