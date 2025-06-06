@@ -27,7 +27,9 @@ export function GameView() {
     })
   }, [game.id])
   async function boxClick(row: number, col: number) {
-
+    if (game.board[row][col] != null) {
+      return
+    }
     const newGame = await api.makeMove(game!.id, row, col)
     setGame(newGame)
   }
@@ -43,6 +45,12 @@ export function GameView() {
     )
   }
   const baseButton = 'text-white p-14 rounded h-14 w-14 flex items-center justify-center border'
+  const hoverBorder = (row: number, col: number): string => {
+    if (game.board[row][col] !== null) {
+      return 'hover:bg-red-700 transition transform hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg'
+    }
+    return 'hover:bg-sky-700 transition transform duration-100 ease-in-out hover:-translate-y-1 hover:-translate-x-1 hover:shadow-lg'
+  }
   const middleNoti = 'absolute bg-opacity-0 flex justify-center font-bold text-2xl items-center h-35 w-50 bg-blue-200 rounded border border-zinc-50 text-gray-600'
   return (
     <>
@@ -56,7 +64,7 @@ export function GameView() {
             return <div key={rowIdx} className='flex flex-row'>{rowObj.map((item, itmIdx) => {
               return (
                 <div key={itmIdx} className=''>
-                  <button className={`bg-blue-500  ${baseButton}`} onClick={() => boxClick(rowIdx, itmIdx)}>
+                  <button disabled={game.board[rowIdx][itmIdx] !== null} className={`bg-blue-500  ${baseButton} ${hoverBorder(rowIdx, itmIdx)}`} onClick={() => boxClick(rowIdx, itmIdx)}>
                     {game.board[rowIdx][itmIdx] ? game.board[rowIdx][itmIdx] : ''}
                   </button>
                 </div>)
