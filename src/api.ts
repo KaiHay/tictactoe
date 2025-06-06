@@ -50,6 +50,16 @@ export class ClientTicTacAPI implements TicTacApi {
         const game = await response.json()
         return game
     }
+    async rematchGame(gameID: string): Promise<Game> {
+        const response = await fetch(`${SERVER_DB_URL}/api/game/${gameID}/rematch`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const game = await response.json()
+        return game
+    }
     async getGame(gameId: string): Promise<Game> {
         const response = await fetch(`${SERVER_DB_URL}/api/game/${gameId}`)
         const game = await response.json()
