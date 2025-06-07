@@ -29,7 +29,6 @@ export const move = (currentGame: Game, playerCoords: PlayerCoords): Game => {
     let newBoard = structuredClone(currentGame.board)
     newBoard[playerCoords.row][playerCoords.column] = currentGame.currentPlayer
     const newPlayer = playerSwitch(currentGame.currentPlayer)
-    console.log(newPlayer)
     const newState: Game = {
         id: currentGame.id,
         board: newBoard,
@@ -41,7 +40,6 @@ export const move = (currentGame: Game, playerCoords: PlayerCoords): Game => {
 
 export const checkEnd = (board: Board, currentPlayer: Player): endState => {
     //check every cell for current, if true, check up if possible,
-    //console.log('checking')
     let Full: number = 0;
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {

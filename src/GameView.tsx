@@ -52,6 +52,7 @@ export function GameView() {
     if (game.board[row][col] != null) {
       return
     }
+    console.log("emit move", game.id, row, col)
     socket.emit("move", game.id, row, col)
   }
 
