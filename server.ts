@@ -35,10 +35,10 @@ app.post("/api/game/:gameId/rematch", async (req, _) => {
 
 
 
-app.post("/api/game/:gameId/move", async (req, _) => {
+app.post("/api/game/:gameId/move", async (req, res) => {
     const game = await newtictac.makeMove(req.params.gameId, req.body.row, req.body.col)
     io.to(makeRoomId(game)).emit('update-game', game);
-    //res.json(game)
+    res.json(game)
 })
 app.get("/api/game/:gameId", async (req, res) => {
     const game = await newtictac.getGame(req.params.gameId)
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on("join-game", async (gameID: string) => {
-        console.log("player joined game: ", gameID, "their socket connection is: ", JSON.stringify(socket))
+        console.log("player joined game: ", gameID, "their socket connection is: ", socket.id)
         const game = await newtictac.getGame(gameID)
         if (!game) {
             console.error(`Game ${gameID} not found`)
