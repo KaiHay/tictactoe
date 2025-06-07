@@ -66,11 +66,11 @@ io.on("connection", (socket) => {
         const roomId = `game-${gameID}`
         console.log("about to emit update-game to roomId: ", roomId, "for game: ", JSON.stringify(game))
         io.to(roomId).emit("update-game", game)
-
+        console.log("finished emitting update-game to roomId: ", roomId, "for game: ", JSON.stringify(game))
     })
 
     socket.on("join-game", async (gameID: string) => {
-        console.log("player joined game", gameID)
+        console.log("player joined game: ", gameID, "their socket connection is: ", JSON.stringify(socket))
         const game = await newtictac.getGame(gameID)
         if (!game) {
             console.error(`Game ${gameID} not found`)
@@ -78,7 +78,8 @@ io.on("connection", (socket) => {
         }
         const roomId = makeRoomId(game)
         // most likely i will need to leave rooms here.
-        socket.rooms.forEach((room) => socket.leave(room))
+        // socket.rooms.forEach((room) => socket.leave(room))
+        console.log("joining room: ", roomId)
         socket.join(roomId)
     })
 

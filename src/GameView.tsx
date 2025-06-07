@@ -8,7 +8,7 @@ import { io } from 'socket.io-client'
 
 const socket = io(SERVER_URL)
 socket.connect()
-socket.on("connect", () => { console.log("connected to socket") })
+socket.on("connect", () => { console.log("connected to socket: ", socket) })
 socket.on("disconnect", () => { console.log("socket disconnected") })
 
 export function GameView() {
@@ -34,6 +34,7 @@ export function GameView() {
     socket.emit("join-game", game.id)
 
     socket.on("update-game", async (currGame: Game) => {
+      console.log('received game update: ', currGame)
       setGame(currGame)
     })
 
