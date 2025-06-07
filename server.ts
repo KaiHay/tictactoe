@@ -25,8 +25,6 @@ app.post("/api/game", async (_, res) => {
 })
 app.get("/api/game", async (_, res) => {
     const game = await newtictac.getInProgGames()
-
-
     res.json(game)
 })
 const makeRoomId = (game: Game) => `game-${game.id}`
@@ -36,7 +34,7 @@ const makeRoomId = (game: Game) => `game-${game.id}`
 app.post("/api/game/:gameId/rematch", async (req, res) => {
     const game = await newtictac.createGame()
     io.to(`game-${req.params.gameId}`).emit("rematch-up", game.id);
-    res.json(game)
+    //res.json(game)
 })
 
 
@@ -44,7 +42,7 @@ app.post("/api/game/:gameId/rematch", async (req, res) => {
 app.post("/api/game/:gameId/move", async (req, res) => {
     const game = await newtictac.makeMove(req.params.gameId, req.body.row, req.body.col)
     io.to(makeRoomId(game)).emit('update-game', game);
-    res.json(game)
+    //res.json(game)
 })
 app.get("/api/game/:gameId", async (req, res) => {
     const game = await newtictac.getGame(req.params.gameId)
@@ -66,22 +64,37 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     console.log('user connected: ' + socket.id);
 
+    socket.on("move", async (gameID: string, row: string, col: string) => {
+        // update the game
+        const game = await newtictac.makeMove(gameID, parseInt(row), parseInt(col))
+        // get the RoomId for the game
+        const roomId = `game-${gameID}`
+        io.to(roomId).emit("update-game", game)
+
+    })
+
     socket.on("join-game", async (gameID: string) => {
-        const newGame = await newtictac.getGame(gameID)
-        if (!newGame) {
+        console.log("received join-game event from client!")
+        const game = await newtictac.getGame(gameID)
+        if (!game) {
             console.error(`Game ${gameID} not found`)
             return
         }
-        const roomId = makeRoomId(newGame)
+        const roomId = makeRoomId(game)
+        console.log("currently in these rooms: ", socket.rooms)
+        // most likely i will need to leave rooms here.
+        socket.rooms.forEach((room) => socket.leave(room))
         socket.join(roomId)
-        io.to(roomId).emit('user-joined', socket.id)
+        // don't both emitting messages that you aren't listening to.
+        // io.to(roomId).emit('user-joined', socket.id)
     })
 
     //rematch 
     socket.on("rematch", async (gameID: string) => {
         const newGame = await newtictac.getGame(gameID)
-        console.log('helo');
-        socket.emit("rematch", newGame.id)
+        console.log(newGame.id);
+        
+        socket.emit("rematch-up", newGame.id)
 
     })
 })
