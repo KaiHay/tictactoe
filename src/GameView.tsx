@@ -3,20 +3,16 @@ import { type Game } from './game/game'
 import './App.css'
 import { ClientTicTacAPI } from './api'
 import { Link, useLoaderData, useNavigate } from 'react-router'
-import { createSocket } from './socket/socket'
 import { SERVER_URL } from './utils/constants'
 import { io } from 'socket.io-client'
 
 const socket = io(SERVER_URL)
-console.log(SERVER_URL)
 socket.connect()
 socket.on("connect", () => { console.log("connected to socket") })
 socket.on("disconnect", () => { console.log("socket disconnected") })
 
 export function GameView() {
   const api = useMemo(() => new ClientTicTacAPI(), [])
-  //console.log('hello');
-
   const { game: initialGame } = useLoaderData<{ game: Game }>()
 
   const [game, setGame] = useState<Game>(initialGame)
@@ -25,8 +21,7 @@ export function GameView() {
   const navigate = useNavigate()
   const newGameButtonClick = async (prevId: string) => {
     const newGame = await api.createGame()
-    socket.emit("rematch", newGame.id)
-
+    socket.emit("rematch", newGame.id, prevId)
     navigate(`/game/${newGame.id}`)
   }
 

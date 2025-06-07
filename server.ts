@@ -62,8 +62,6 @@ const io = new Server(server, {
 })
 
 io.on("connection", (socket) => {
-    console.log('user connected: ' + socket.id);
-
     socket.on("move", async (gameID: string, row: string, col: string) => {
         // update the game
         const game = await newtictac.makeMove(gameID, parseInt(row), parseInt(col))
@@ -74,27 +72,21 @@ io.on("connection", (socket) => {
     })
 
     socket.on("join-game", async (gameID: string) => {
-        console.log("received join-game event from client!")
         const game = await newtictac.getGame(gameID)
         if (!game) {
             console.error(`Game ${gameID} not found`)
             return
         }
         const roomId = makeRoomId(game)
-        console.log("currently in these rooms: ", socket.rooms)
         // most likely i will need to leave rooms here.
         socket.rooms.forEach((room) => socket.leave(room))
         socket.join(roomId)
-        // don't both emitting messages that you aren't listening to.
-        // io.to(roomId).emit('user-joined', socket.id)
     })
 
     //rematch 
-    socket.on("rematch", async (gameID: string) => {
+    socket.on("rematch", async (gameID: string, prevID: string) => {
         const newGame = await newtictac.getGame(gameID)
-        console.log(newGame.id);
-        
-        socket.emit("rematch-up", newGame.id)
+        io.to(`game-${prevID}`).emit("rematch-up", newGame.id)
 
     })
 })
