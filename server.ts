@@ -59,15 +59,18 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     socket.on("move", async (gameID: string, row: string, col: string) => {
+        console.log("move happened", gameID, row, col)
         // update the game
         const game = await newtictac.makeMove(gameID, parseInt(row), parseInt(col))
         // get the RoomId for the game
         const roomId = `game-${gameID}`
+        console.log("about to emit update-game to roomId: ", roomId, "for game: ", JSON.stringify(game))
         io.to(roomId).emit("update-game", game)
 
     })
 
     socket.on("join-game", async (gameID: string) => {
+        console.log("player joined game", gameID)
         const game = await newtictac.getGame(gameID)
         if (!game) {
             console.error(`Game ${gameID} not found`)
@@ -81,6 +84,7 @@ io.on("connection", (socket) => {
 
     //rematch 
     socket.on("rematch", async (gameID: string, prevID: string) => {
+        console.log("rematch:", gameID, prevID)
         const newGame = await newtictac.getGame(gameID)
         io.to(`game-${prevID}`).emit("rematch-up", newGame.id)
 
