@@ -31,7 +31,7 @@ const makeRoomId = (game: Game) => `game-${game.id}`
 
 
 
-app.post("/api/game/:gameId/rematch", async (req, res) => {
+app.post("/api/game/:gameId/rematch", async (req, _) => {
     const game = await newtictac.createGame()
     io.to(`game-${req.params.gameId}`).emit("rematch-up", game.id);
     //res.json(game)
@@ -39,7 +39,7 @@ app.post("/api/game/:gameId/rematch", async (req, res) => {
 
 
 
-app.post("/api/game/:gameId/move", async (req, res) => {
+app.post("/api/game/:gameId/move", async (req, _) => {
     const game = await newtictac.makeMove(req.params.gameId, req.body.row, req.body.col)
     io.to(makeRoomId(game)).emit('update-game', game);
     //res.json(game)
