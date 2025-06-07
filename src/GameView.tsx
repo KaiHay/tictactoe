@@ -1,15 +1,18 @@
 import { useState, useMemo, useEffect } from 'react'
 import { type Game } from './game/game'
 import './App.css'
-import { io } from 'socket.io-client'
 import { ClientTicTacAPI } from './api'
 import { Link, useLoaderData, useNavigate } from 'react-router'
 import { SERVER_URL } from './utils/constants'
+import { io } from 'socket.io-client'
+
+const socket = io(SERVER_URL)
+socket.connect()
+socket.on("connect", () => { console.log("connected to socket") })
+socket.on("disconnect", () => { console.log("socket disconnected") })
 
 export function GameView() {
   const api = useMemo(() => new ClientTicTacAPI(), [])
-  //console.log('hello');
-
   const { game: initialGame } = useLoaderData<{ game: Game }>()
 
   const [game, setGame] = useState<Game>(initialGame)
@@ -17,8 +20,8 @@ export function GameView() {
 
   const navigate = useNavigate()
   const newGameButtonClick = async (prevId: string) => {
-    const newGame = (await api.rematchGame(prevId))
-
+    const newGame = await api.createGame()
+    socket.emit("rematch", newGame.id, prevId)
     navigate(`/game/${newGame.id}`)
   }
 
@@ -28,32 +31,30 @@ export function GameView() {
   }, [initialGame])
 
   useEffect(() => {
-    const socket = io(SERVER_URL)
-    socket.on("connect", () => {
-      socket.emit("join-game", game.id)
+    socket.emit("join-game", game.id)
 
-      socket.on("update-game", async (curr_Game: Game) => {
-        const newGame = await api.getGame(curr_Game.id)
-        setGame(newGame)
-      })
-      socket.on("rematch-up", async (gameID: string) => {
-        console.log("got a rematch request!", gameID);
-        setRematch(gameID)
-      })
-      // useEffect(() => {
-      //   socket.emit("rematch",)
-      // }, [rematch])
-      return () => { socket.disconnect }
+    socket.on("update-game", async (currGame: Game) => {
+      setGame(currGame)
     })
+
+    socket.on("rematch-up", async (gameID: string) => {
+      setRematch(gameID)
+    })
+
+    return () => {
+      socket.removeAllListeners("update-game")
+      socket.removeAllListeners("rematch-up")
+    }
+
   }, [game.id])
 
   async function boxClick(row: number, col: number) {
     if (game.board[row][col] != null) {
       return
     }
-    const newGame = await api.makeMove(game!.id, row, col)
-    setGame(newGame)
+    socket.emit("move", game.id, row, col)
   }
+
   const checkWin = (currentGame: Game) => {
     if (currentGame.end) {
       return currentGame.end
